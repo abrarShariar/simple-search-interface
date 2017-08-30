@@ -34,44 +34,51 @@ class MainBox extends React.Component {
         this.setState({
             isSearchBtnClicked: true
         });
+        if (_.isEmpty(this.state.inputKey)) {
+            this.setState({
+                isSearchFound: false,
+                searchResults: [],
+                displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
+            })
+        } else {
+            HttpService.searchProduct(this.state.inputKey).then((response) => {
+                if (response.status === 200 && response.statusText === "OK") {
+                    if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
+                        this.setState({
+                            isSearchFound: true,
+                            displayText: ""
+                        });
 
-        HttpService.searchProduct(this.state.inputKey).then((response) => {
-            if (response.status === 200 && response.statusText === "OK") {
-                if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
-                    this.setState({
-                        isSearchFound: true,
-                        displayText: ""
-                    });
+                        let searchResults = [];
+                        _.each(response.data.hits.hits, (item) => {
+                            let product = {
+                                id: item['_id'],
+                                title: item._source['title'],
+                                price: item._source['price'],
+                                listPrice: item._source['listPrice'],
+                                salePrice: item._source['salePrice'],
+                                brand: item._source['brand'],
+                                thumb: item._source['images'][0],
+                            };
+                            searchResults.push(product);
+                        });
 
-                    let searchResults = [];
-                    _.each(response.data.hits.hits, (item) => {
-                        let product = {
-                            id: item['_id'],
-                            title: item._source['title'],
-                            price: item._source['price'],
-                            listPrice: item._source['listPrice'],
-                            salePrice: item._source['salePrice'],
-                            brand: item._source['brand'],
-                            thumb: item._source['images'][0],
-                        };
-                        searchResults.push(product);
-                    });
-
-                    this.setState({
-                        searchResults: searchResults,
-                        displayText: ""
-                    })
-                } else {
-                    this.setState({
-                        isSearchFound: false,
-                        searchResults: [],
-                        displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
-                    })
+                        this.setState({
+                            searchResults: searchResults,
+                            displayText: ""
+                        })
+                    } else {
+                        this.setState({
+                            isSearchFound: false,
+                            searchResults: [],
+                            displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
+                        })
+                    }
                 }
-            }
-        }).catch((err) => {
-            console.log(err);
-        });
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
     }
 
     //callback to pass from child component - ProductThumb
@@ -129,7 +136,8 @@ class MainBox extends React.Component {
                     </div>
                 </div>
                 <div className="RightBox">
-                    <CartBox displayText={this.state.cartBoxText} cartItems={this.state.cartItems} clearCartCallback={this.clearCartEvent}/>
+                    <CartBox displayText={this.state.cartBoxText} cartItems={this.state.cartItems}
+                             clearCartCallback={this.clearCartEvent}/>
                 </div>
             </div>
         )
