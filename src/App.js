@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 
 //components
-import SearchBox from './SearchBox';
-import CartBox from './CartBox';
+import SearchBox from './components/SearchBox';
+import CartBox from './components/CartBox';
 
 class App extends Component {
     render() {
