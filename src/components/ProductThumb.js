@@ -43,8 +43,8 @@ class ProductThumb extends React.Component {
                                 <p>
                                     <strong> $ {this.props.productData.price} </strong>
                                 </p>
-                                <p><a href="#" className="btn btn-warning" role="button"
-                                      onClick={this.addToCartHandler}>Add to Cart</a>
+                                <p><button className="btn btn-warning" role="button"
+                                      onClick={this.addToCartHandler}>Add to Cart</button>
                                 </p>
                             </div>
                         </div>

@@ -6,11 +6,27 @@ class CartBox extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            displayText: "You have no item in your cart"
+        }
     }
 
     componentWillReceiveProps() {
         // console.log(this.props.cartItems);
+        if (this.props.cartItems.length > 0) {
+            this.setState({
+                displayText: ""
+            })
+        }
     }
+
+    // componentDidUpdate(){
+    //     if(this.props.cartItems.length > 0){
+    //         this.setState({
+    //             displayText: ""
+    //         })
+    //     }
+    // }
 
     render() {
         return (
@@ -64,9 +80,11 @@ class CartBox extends React.Component {
 
                 <div className="TextBox">
                     <p>
-                        You have no item in your cart
+                        {this.state.displayText}
                     </p>
                 </div>
+
+
             </div>
         )
     }
