@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 //component for a product thumb
 import './ProductThumb.css';
 
-
 function ProductTitle(props) {
     let title = props.title;
     if (props.title.length > 20) {
@@ -39,7 +38,12 @@ class ProductThumb extends React.Component {
                             <div className="caption">
                                 <div className="ProductTitle">
                                     <ProductTitle title={this.props.productData.title}/>
+                                    <br/>
+                                    <span>
+                                        {this.props.productData.brand}
+                                    </span>
                                 </div>
+
                                 <p>
                                     <strong> $ {this.props.productData.price} </strong>
                                 </p>

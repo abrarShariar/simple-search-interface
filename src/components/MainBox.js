@@ -16,7 +16,8 @@ class MainBox extends React.Component {
             isSearchBtnClicked: false,
             displayText: "What'll you buy today ?",
             searchResults: [],
-            cartItems: []
+            cartItems: [],
+            cartBoxText: "You have no item in your cart"
         };
 
         this.getInputKey = this.getInputKey.bind(this);
@@ -77,7 +78,16 @@ class MainBox extends React.Component {
     getAddToCartEvent = (productData) => {
         this.state.cartItems.push(productData);
         this.setState({
-            cartItems: this.state.cartItems
+            cartItems: this.state.cartItems,
+            cartBoxText: ""
+        })
+    }
+
+    //callback to pass from child component - CartBox
+    clearCartEvent = () => {
+        this.setState({
+            cartItems: [],
+            cartBoxText: "You have no item in your cart"
         })
     }
 
@@ -104,7 +114,8 @@ class MainBox extends React.Component {
                                 this.state.searchResults.map((item, index) => {
                                     return (
                                         <div className="ProductThumbContainer">
-                                            <ProductThumb productData={item} addToCartCallback={this.getAddToCartEvent}/>
+                                            <ProductThumb productData={item}
+                                                          addToCartCallback={this.getAddToCartEvent}/>
                                         </div>
                                     )
                                 })
@@ -118,7 +129,7 @@ class MainBox extends React.Component {
                     </div>
                 </div>
                 <div className="RightBox">
-                    <CartBox cartItems={this.state.cartItems} />
+                    <CartBox displayText={this.state.cartBoxText} cartItems={this.state.cartItems} clearCartCallback={this.clearCartEvent}/>
                 </div>
             </div>
         )

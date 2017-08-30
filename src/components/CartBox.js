@@ -6,27 +6,16 @@ class CartBox extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            displayText: "You have no item in your cart"
-        }
+        this.clearCartHandler = this.clearCartHandler.bind(this);
     }
 
-    componentWillReceiveProps() {
-        // console.log(this.props.cartItems);
-        if (this.props.cartItems.length > 0) {
-            this.setState({
-                displayText: ""
-            })
-        }
-    }
 
-    // componentDidUpdate(){
-    //     if(this.props.cartItems.length > 0){
-    //         this.setState({
-    //             displayText: ""
-    //         })
-    //     }
-    // }
+    clearCartHandler(e) {
+        this.props.clearCartCallback();
+        this.setState({
+            displayText: "You have no item in your cart",
+        });
+    }
 
     render() {
         return (
@@ -36,12 +25,11 @@ class CartBox extends React.Component {
                         <span id="title">Cart</span>
                         <br/><br/>
                     </div>
-
                     <div className="RightGrid">
                     <span id="clearCart">
-                        <a href="#">
+                        <button type="button" className="btn btn-link" onClick={this.clearCartHandler}>
                             Clear Cart
-                        </a>
+                        </button>
                     </span>
                         <br/><br/>
                     </div>
@@ -74,13 +62,11 @@ class CartBox extends React.Component {
                             })
                         }
                     </ol>
-
                 </div>
-
 
                 <div className="TextBox">
                     <p>
-                        {this.state.displayText}
+                        {this.props.displayText}
                     </p>
                 </div>
 
