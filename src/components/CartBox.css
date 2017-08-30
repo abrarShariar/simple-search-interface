@@ -1,5 +1,5 @@
 .CartBox {
-
+    /*position: fixed;*/
 }
 
 .TextBox {
@@ -18,16 +18,24 @@
     margin-top: 50px;
     display: flex;
     text-align: center;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .LeftGrid {
     flex: 2;
     order: 1;
+
+    /*flex-grow: 0;*/
+    /*flex-shrink: 0;*/
 }
 
 .RightGrid {
     flex: 1;
     order: 2;
+
+    /*flex-grow: 0;*/
+    /*flex-shrink: 0;*/
 }
 
 .CartBox > h1 {

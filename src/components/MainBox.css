@@ -6,10 +6,13 @@
     border-right: 2px solid darkgray;
     min-height:100%;
     height:100vh;
+    max-width:80%
 }
 
 .MainBox {
     display: flex;
+    /*width:70%*/
+
 }
 
 .searchBox{
@@ -17,10 +20,9 @@
 }
 
 .LeftBox {
-    flex: 5;
+    flex: 7;
     order: 1;
     /*border: 1px solid red;*/
-
 }
 
 .RightBox {
@@ -49,6 +51,5 @@
 .ProductThumbContainer{
     width: 20%;
     padding: 20px 20px 20px 20px;
-
 }
 
