@@ -1,0 +1,45 @@
+.CartBox {
+
+}
+
+.TextBox {
+    text-align: center;
+    margin-top: 200px;
+}
+
+.TextBox > p {
+    margin: 0 0 10px;
+    font-size: large;
+    font-weight: 700;
+    color: grey;
+}
+
+.MainGrid {
+    margin-top: 50px;
+    display: flex;
+    text-align: center;
+}
+
+.LeftGrid {
+    flex: 2;
+    order: 1;
+}
+
+.RightGrid {
+    flex: 1;
+    order: 2;
+}
+
+.CartBox > h1 {
+    text-align: center;
+}
+
+#clearCart {
+    margin-top: 20px;
+}
+
+#title {
+    font-size: x-large;
+}
+
+

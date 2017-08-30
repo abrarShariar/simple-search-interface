@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-
+import './CartBox.css';
 
 //component to be displayed on the right to show cart items
-
 class CartBox extends React.Component {
+
 
     constructor(props) {
         super(props);
@@ -12,8 +12,28 @@ class CartBox extends React.Component {
     render() {
         return (
             <div className="CartBox">
-                <h1>This is the Cart Box</h1>
+                <div className="MainGrid">
+                    <div className="LeftGrid">
+                        <span id="title">Cart</span>
+                    </div>
+
+                    <div className="RightGrid">
+                    <span id="clearCart">
+                        <a href="#">
+                            Clear Cart
+                        </a>
+                    </span>
+                    </div>
+                </div>
+
+                <div className="TextBox">
+                    <p>
+                        You have no item in your cart
+                    </p>
+                </div>
             </div>
+
+
         )
     }
 }
