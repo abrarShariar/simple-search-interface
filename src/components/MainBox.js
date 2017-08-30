@@ -26,6 +26,8 @@ class SearchBox extends React.Component {
         this.setState({
             inputKey: e.target.value
         });
+
+       console.log(this.state.inputKey);
     }
 
     searchHandler() {

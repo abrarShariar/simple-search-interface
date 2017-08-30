@@ -1,9 +1,29 @@
 .caption > span{
-    font-size:100px;
+    /*font-size:100px;*/
 }
 
 .ProductThumb{
     /*display: flex;*/
     /*flex-wrap: wrap;*/
     /*justify-content: space-around;*/
+}
+
+.thumbnail{
+    /*height:100%;*/
+}
+
+.thumbnail > img{
+    height: 300px;
+    width: 100%;
+}
+
+.row.display-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+.ProductTitle{
+    height: 50px;
+    font-weight: 900;
 }
