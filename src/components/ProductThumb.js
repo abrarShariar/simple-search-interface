@@ -22,6 +22,11 @@ class ProductThumb extends React.Component {
 
     constructor(props) {
         super(props);
+        this.addToCartHandler = this.addToCartHandler.bind(this);
+    }
+
+    addToCartHandler(e) {
+        this.props.addToCartCallback(this.props.productData);
     }
 
     render() {
@@ -38,7 +43,8 @@ class ProductThumb extends React.Component {
                                 <p>
                                     <strong> $ {this.props.productData.price} </strong>
                                 </p>
-                                <p><a href="#" className="btn btn-warning" role="button">Add to Cart</a>
+                                <p><a href="#" className="btn btn-warning" role="button"
+                                      onClick={this.addToCartHandler}>Add to Cart</a>
                                 </p>
                             </div>
                         </div>

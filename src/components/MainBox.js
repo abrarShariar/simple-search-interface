@@ -6,7 +6,7 @@ import HttpService from '../HttpService';
 import * as _ from 'underscore';
 
 //component to be displayed with the search box and search results
-class SearchBox extends React.Component {
+class MainBox extends React.Component {
 
     constructor(props) {
         super(props);
@@ -15,7 +15,8 @@ class SearchBox extends React.Component {
             isSearchFound: false,
             isSearchBtnClicked: false,
             displayText: "What'll you buy today ?",
-            searchResults: []
+            searchResults: [],
+            cartItems: []
         };
 
         this.getInputKey = this.getInputKey.bind(this);
@@ -26,8 +27,6 @@ class SearchBox extends React.Component {
         this.setState({
             inputKey: e.target.value
         });
-
-       console.log(this.state.inputKey);
     }
 
     searchHandler() {
@@ -54,7 +53,6 @@ class SearchBox extends React.Component {
                             brand: item._source['brand'],
                             thumb: item._source['images'][0],
                         };
-
                         searchResults.push(product);
                     });
 
@@ -73,6 +71,14 @@ class SearchBox extends React.Component {
         }).catch((err) => {
             console.log(err);
         });
+    }
+
+    //callback to pass from child component - ProductThumb
+    getAddToCartEvent = (productData) => {
+        this.state.cartItems.push(productData);
+        this.setState({
+            cartItems: this.state.cartItems
+        })
     }
 
     render() {
@@ -96,15 +102,14 @@ class SearchBox extends React.Component {
                         <div className="SearchResultContainer">
                             {
                                 this.state.searchResults.map((item, index) => {
-                                   return(
-                                   <div className="ProductThumbContainer">
-                                       <ProductThumb productData={item} />
-                                   </div>
-                                   )
+                                    return (
+                                        <div className="ProductThumbContainer">
+                                            <ProductThumb productData={item} addToCartCallback={this.getAddToCartEvent}/>
+                                        </div>
+                                    )
                                 })
                             }
                         </div>
-
                         <div className="MainTextBox">
                             <p>
                                 {this.state.displayText}
@@ -113,11 +118,11 @@ class SearchBox extends React.Component {
                     </div>
                 </div>
                 <div className="RightBox">
-                    <CartBox/>
+                    <CartBox cartItems={this.state.cartItems} />
                 </div>
             </div>
         )
     }
 }
 
-export default SearchBox;
+export default MainBox;

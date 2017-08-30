@@ -52,4 +52,21 @@
     font-weight: 900;
 }
 
+.CartList {
+    display: flex;
+}
+
+.productGrid {
+    flex: 4;
+    order: 1;
+}
+
+.priceGrid {
+    flex: 1;
+    order: 2;
+}
+
+.priceGrid > strong {
+}
+
 
