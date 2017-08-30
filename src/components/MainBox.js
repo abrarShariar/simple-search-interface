@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import CartBox from './CartBox';
 import './MainBox.css';
 
+import ProductThumb from './ProductThumb';
+
 import HttpService from '../HttpService';
 import * as _ from 'underscore';
 
@@ -14,7 +16,8 @@ class SearchBox extends React.Component {
             inputKey: "",
             isSearchFound: false,
             isSearchBtnClicked: false,
-            displayText: "What'll you buy today ?"
+            displayText: "What'll you buy today ?",
+            searchResults: []
         };
 
         this.getInputKey = this.getInputKey.bind(this);
@@ -34,13 +37,33 @@ class SearchBox extends React.Component {
 
         HttpService.searchProduct(this.state.inputKey).then((response) => {
             console.log(response);
-            if(response.status === 200 && response.statusText === "OK"){
-                if(response.data.hits.hits.length > 0 &&  response.data.hits.total !== 0){
+            if (response.status === 200 && response.statusText === "OK") {
+                if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
                     this.setState({
                         isSearchFound: true,
                         displayText: ""
+                    });
+
+                    let searchResults = [];
+                    _.each(response.data.hits.hits, (item) => {
+                        let product = {
+                            id: item['_id'],
+                            title: item._source['title'],
+                            price: item._source['price'],
+                            listPrice: item._source['listPrice'],
+                            salePrice: item._source['salePrice'],
+                            brand: item._source['brand'],
+                            images: item._source['images'],
+                        };
+
+                        searchResults.push(product);
+                    });
+
+                    this.setState({
+                        searchResults: searchResults,
+                        displayText: ""
                     })
-                }else{
+                } else {
                     this.setState({
                         isSearchFound: false,
                         displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
@@ -69,6 +92,18 @@ class SearchBox extends React.Component {
                             </div>
                             <br/>
                             <p>{this.state.inputKey}</p>
+                        </div>
+
+                        <div className="SearchResultContainer">
+                            {
+                                this.state.searchResults.map((item, index) => {
+                                   return(
+                                   <div className="ProductThumbContainer">
+                                       <ProductThumb productData={item} />
+                                   </div>
+                                   )
+                                })
+                            }
                         </div>
 
                         <div className="MainTextBox">
