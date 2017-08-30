@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import CartBox from './CartBox';
-import MainTextBox from './MainTextBox';
 import './MainBox.css';
 
 import HttpService from '../HttpService';
+import * as _ from 'underscore';
 
 //component to be displayed with the search box and search results
 class SearchBox extends React.Component {
@@ -13,7 +13,8 @@ class SearchBox extends React.Component {
         this.state = {
             inputKey: "",
             isSearchFound: false,
-            isSearchBtnClicked: false
+            isSearchBtnClicked: false,
+            displayText: "What'll you buy today ?"
         };
 
         this.getInputKey = this.getInputKey.bind(this);
@@ -31,21 +32,27 @@ class SearchBox extends React.Component {
             isSearchBtnClicked: true
         });
 
-        HttpService.searchProduct(this.state.inputKey).then((data) => {
-            console.log(data);
+        HttpService.searchProduct(this.state.inputKey).then((response) => {
+            console.log(response);
+            if(response.status === 200 && response.statusText === "OK"){
+                if(response.data.hits.hits.length > 0 &&  response.data.hits.total !== 0){
+                    this.setState({
+                        isSearchFound: true,
+                        displayText: ""
+                    })
+                }else{
+                    this.setState({
+                        isSearchFound: false,
+                        displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
+                    })
+                }
+            }
         }).catch((err) => {
             console.log(err);
         });
     }
 
     render() {
-        let stateStep = 1;
-        if(this.state.isSearchFound && this.state.isSearchBtnClicked){
-            stateStep = 3;
-        }else if(!this.state.isSearchFound && this.state.isSearchBtnClicked){
-            stateStep = 4;
-        }
-
         return (
             <div className="MainBox">
                 <div className="LeftGridFull">
@@ -64,8 +71,11 @@ class SearchBox extends React.Component {
                             <p>{this.state.inputKey}</p>
                         </div>
 
-                        <MainTextBox stateStep={stateStep}/>
-
+                        <div className="MainTextBox">
+                            <p>
+                                {this.state.displayText}
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div className="RightBox">
