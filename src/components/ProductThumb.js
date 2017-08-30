@@ -9,15 +9,14 @@ class ProductThumb extends React.Component {
     render() {
         return (
             <div className="ProductThumb">
-                <div className="row">
-                    <div className="">
+                <div>
+                    <div>
                         <div className="thumbnail">
-                            <img src="..." alt="..."/>
+                            <img src={this.props.productData.thumb} alt="product thumbnail"/>
                             <div className="caption">
                                 <span>{this.props.productData.title}</span>
                                 <p>...</p>
                                 <p><a href="#" className="btn btn-warning" role="button">Add to Cart</a>
-
                                 </p>
                             </div>
                         </div>

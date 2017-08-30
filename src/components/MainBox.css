@@ -17,16 +17,15 @@
 }
 
 .LeftBox {
-    flex: 2;
+    flex: 5;
     order: 1;
     /*border: 1px solid red;*/
 
 }
 
 .RightBox {
-    flex: 1;
+    flex: 4;
     order: 2;
-    /*border: 1px solid red;*/
 }
 
 .MainTextBox{
@@ -43,9 +42,13 @@
 
 .SearchResultContainer{
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .ProductThumbContainer{
-    flex: 2
+    width: 20%;
+    padding: 20px 20px 20px 20px;
+
 }
 

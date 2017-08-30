@@ -1,3 +1,9 @@
 .caption > span{
     font-size:100px;
 }
+
+.ProductThumb{
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*justify-content: space-around;*/
+}

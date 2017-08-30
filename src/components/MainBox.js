@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import CartBox from './CartBox';
 import './MainBox.css';
-
 import ProductThumb from './ProductThumb';
-
 import HttpService from '../HttpService';
 import * as _ from 'underscore';
 
@@ -36,7 +34,6 @@ class SearchBox extends React.Component {
         });
 
         HttpService.searchProduct(this.state.inputKey).then((response) => {
-            console.log(response);
             if (response.status === 200 && response.statusText === "OK") {
                 if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
                     this.setState({
@@ -53,7 +50,7 @@ class SearchBox extends React.Component {
                             listPrice: item._source['listPrice'],
                             salePrice: item._source['salePrice'],
                             brand: item._source['brand'],
-                            images: item._source['images'],
+                            thumb: item._source['images'][0],
                         };
 
                         searchResults.push(product);
@@ -66,6 +63,7 @@ class SearchBox extends React.Component {
                 } else {
                     this.setState({
                         isSearchFound: false,
+                        searchResults: [],
                         displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
                     })
                 }
@@ -91,7 +89,6 @@ class SearchBox extends React.Component {
                                 </div>
                             </div>
                             <br/>
-                            <p>{this.state.inputKey}</p>
                         </div>
 
                         <div className="SearchResultContainer">
