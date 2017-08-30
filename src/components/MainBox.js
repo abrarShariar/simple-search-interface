@@ -12,8 +12,10 @@ class SearchBox extends React.Component {
         super(props);
         this.state = {
             inputKey: "",
-            isSearchFound: false
+            isSearchFound: false,
+            isSearchBtnClicked: false
         };
+
         this.getInputKey = this.getInputKey.bind(this);
         this.searchHandler = this.searchHandler.bind(this);
     }
@@ -25,6 +27,10 @@ class SearchBox extends React.Component {
     }
 
     searchHandler() {
+        this.setState({
+            isSearchBtnClicked: true
+        });
+
         HttpService.searchProduct(this.state.inputKey).then((data) => {
             console.log(data);
         }).catch((err) => {
@@ -34,9 +40,9 @@ class SearchBox extends React.Component {
 
     render() {
         let stateStep = 1;
-        if(this.state.isSearchFound){
+        if(this.state.isSearchFound && this.state.isSearchBtnClicked){
             stateStep = 3;
-        }else if(!this.state.isSearchFound){
+        }else if(!this.state.isSearchFound && this.state.isSearchBtnClicked){
             stateStep = 4;
         }
 

@@ -4,20 +4,23 @@ import './MainBox.css';
 class MainTextBox extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            displayText: ""
+        }
 
 
         if(this.props.stateStep === 1){
-            this.state = {
+            this.setState({
                 displayText: "What'll you buy today ?"
-            };
+            });
         }else if(this.props.stateStep === 2 || props.stateStep === 3){
-            this.state = {
+            this.setState({
                 displayText: ""
-            };
+            });
         }else if(this.props.stateStep === 4){
-            this.state = {
+            this.setState({
                 displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
-            };
+            });
         }
     }
 
