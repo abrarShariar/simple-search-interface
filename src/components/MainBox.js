@@ -1,25 +1,45 @@
 import React, {Component} from 'react';
 import CartBox from './CartBox';
+import MainTextBox from './MainTextBox';
 import './MainBox.css';
-//component to be displayed with the search box and search results
 
+import HttpService from '../HttpService';
+
+//component to be displayed with the search box and search results
 class SearchBox extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            inputKey: ""
+            inputKey: "",
+            isSearchFound: false
         };
         this.getInputKey = this.getInputKey.bind(this);
+        this.searchHandler = this.searchHandler.bind(this);
     }
 
     getInputKey(e) {
         this.setState({
             inputKey: e.target.value
-        })
+        });
+    }
+
+    searchHandler() {
+        HttpService.searchProduct(this.state.inputKey).then((data) => {
+            console.log(data);
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     render() {
+        let stateStep = 1;
+        if(this.state.isSearchFound){
+            stateStep = 3;
+        }else if(!this.state.isSearchFound){
+            stateStep = 4;
+        }
+
         return (
             <div className="MainBox">
                 <div className="LeftGridFull">
@@ -29,18 +49,16 @@ class SearchBox extends React.Component {
                                 <input type="text" className="form-control" onKeyUp={this.getInputKey}
                                        placeholder="Search..." name="search"/>
                                 <div className="input-group-btn">
-                                    <button className="btn btn-success" type="button">Search</button>
+                                    <button className="btn btn-success" type="button" onClick={this.searchHandler}>
+                                        Search
+                                    </button>
                                 </div>
                             </div>
                             <br/>
                             <p>{this.state.inputKey}</p>
                         </div>
 
-                        <div className="MainTextBox">
-                            <p>
-                                What'll you buy today ?
-                            </p>
-                        </div>
+                        <MainTextBox stateStep={stateStep}/>
 
                     </div>
                 </div>

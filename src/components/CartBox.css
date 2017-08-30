@@ -32,6 +32,7 @@
 
 .CartBox > h1 {
     text-align: center;
+
 }
 
 #clearCart {
@@ -39,7 +40,8 @@
 }
 
 #title {
-    font-size: x-large;
+    font-size: xx-large;
+    font-weight: 900;
 }
 
 
