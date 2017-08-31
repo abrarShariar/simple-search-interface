@@ -109,10 +109,6 @@ class MainBox extends React.Component {
     render() {
         return (
             <div className="MainBox">
-
-
-
-
                 <div className="LeftGridFull">
                     <div className="LeftBox">
                         <div className="searchBox">

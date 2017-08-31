@@ -9,12 +9,11 @@ class LoadingComponent extends React.Component {
     }
 
     render() {
-            return (
-                <div>
-                    <ReactLoading type="spin" color="#ff0400" height='100' width='100'/>
-                </div>
-
-            )
+        return (
+            <div>
+                <ReactLoading type="spin" color="#ff0400" height='100' width='100'/>
+            </div>
+        )
     }
 }
 

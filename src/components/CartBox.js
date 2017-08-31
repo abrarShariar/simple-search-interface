@@ -9,7 +9,6 @@ class CartBox extends React.Component {
         this.clearCartHandler = this.clearCartHandler.bind(this);
     }
 
-
     clearCartHandler(e) {
         this.props.clearCartCallback();
         this.setState({
@@ -27,9 +26,14 @@ class CartBox extends React.Component {
                     </div>
                     <div className="RightGrid">
                     <span id="clearCart">
-                        <button type="button" className="btn btn-link" onClick={this.clearCartHandler}>
+
+                        {this.props.cartItems.length > 0 ? <a type="button" className="btn btn-link" onClick={this.clearCartHandler}>
                             Clear Cart
-                        </button>
+                        </a> : <a disabled type="button" className="btn btn-link" onClick={this.clearCartHandler}>
+                            Clear Cart
+                        </a>}
+
+
                     </span>
                         <br/><br/>
                     </div>
