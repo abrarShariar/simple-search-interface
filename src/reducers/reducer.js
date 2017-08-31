@@ -4,8 +4,6 @@ import {
     CLEAR_CART
 } from '../action';
 
-
-
 //defining initial state
 const initialState = {
     search_text: "",
