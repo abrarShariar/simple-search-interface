@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-
-// components
 import MainBox from './components/MainBox';
 
 // this is the root component
