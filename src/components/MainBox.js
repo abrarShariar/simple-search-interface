@@ -32,7 +32,6 @@ class MainBox extends React.Component {
     }
 
     searchHandler() {
-
         this.setState({
             isSearchBtnClicked: true,
             isShowLoader: true,
@@ -90,11 +89,9 @@ class MainBox extends React.Component {
 
     //callback to pass from child component - ProductThumb
     getAddToCartEvent = (productData) => {
-
         let duplicateProduct = _.find(this.state.cartItems, (item) => {
             return item.id === productData.id;
         });
-
         if (!duplicateProduct) {
             productData['quantity'] = 1;
             this.state.cartItems.push(productData);
@@ -106,7 +103,6 @@ class MainBox extends React.Component {
                 }
             });
         }
-
         this.setState({
             cartItems: this.state.cartItems,
             cartBoxText: ""
@@ -138,13 +134,11 @@ class MainBox extends React.Component {
                             </div>
                             <br/>
                         </div>
-
                         <div className="LoadingBox">
                             {
                                 this.state.isSearchBtnClicked && this.state.isShowLoader ? <LoadingComponent/> : null
                             }
                         </div>
-
                         <div className="SearchResultContainer">
                             {
                                 this.state.searchResults.map((item, index) => {
