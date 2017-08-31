@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import CartBox from './CartBox';
 import './MainBox.css';
 import ProductThumb from './ProductThumb';
+import LoadingComponent from './LoadingComponent';
 import HttpService from '../HttpService';
 import * as _ from 'underscore';
 
@@ -34,6 +35,7 @@ class MainBox extends React.Component {
         this.setState({
             isSearchBtnClicked: true
         });
+
         if (_.isEmpty(this.state.inputKey)) {
             this.setState({
                 isSearchFound: false,
@@ -44,10 +46,6 @@ class MainBox extends React.Component {
             HttpService.searchProduct(this.state.inputKey).then((response) => {
                 if (response.status === 200 && response.statusText === "OK") {
                     if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
-                        this.setState({
-                            isSearchFound: true,
-                            displayText: ""
-                        });
 
                         let searchResults = [];
                         _.each(response.data.hits.hits, (item) => {
@@ -62,17 +60,21 @@ class MainBox extends React.Component {
                             };
                             searchResults.push(product);
                         });
-
-                        this.setState({
-                            searchResults: searchResults,
-                            displayText: ""
-                        })
+                        setTimeout(() => {
+                            this.setState({
+                                isSearchFound: true,
+                                searchResults: searchResults,
+                                displayText: ""
+                            })
+                        }, 3000)
                     } else {
-                        this.setState({
-                            isSearchFound: false,
-                            searchResults: [],
-                            displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
-                        })
+                        setTimeout(() => {
+                            this.setState({
+                                isSearchFound: false,
+                                searchResults: [],
+                                displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
+                            })
+                        }, 3000)
                     }
                 }
             }).catch((err) => {
@@ -87,7 +89,7 @@ class MainBox extends React.Component {
         this.setState({
             cartItems: this.state.cartItems,
             cartBoxText: ""
-        })
+        });
     }
 
     //callback to pass from child component - CartBox
@@ -95,7 +97,7 @@ class MainBox extends React.Component {
         this.setState({
             cartItems: [],
             cartBoxText: "You have no item in your cart"
-        })
+        });
     }
 
     render() {
@@ -115,7 +117,6 @@ class MainBox extends React.Component {
                             </div>
                             <br/>
                         </div>
-
                         <div className="SearchResultContainer">
                             {
                                 this.state.searchResults.map((item, index) => {
@@ -124,14 +125,19 @@ class MainBox extends React.Component {
                                             <ProductThumb productData={item}
                                                           addToCartCallback={this.getAddToCartEvent}/>
                                         </div>
-                                    )
+                                    );
                                 })
                             }
                         </div>
                         <div className="MainTextBox">
                             <p>
-                                {this.state.displayText}
+                                {this.state.isSearchBtnClicked && !this.state.isSearchFound ? null  : this.state.displayText}
                             </p>
+                        </div>
+                        <div className="LoadingBox">
+                            {
+                                this.state.isSearchBtnClicked ? <LoadingComponent isSearchBtnClicked={this.state.isSearchBtnClicked}/> : null
+                            }
                         </div>
                     </div>
                 </div>
