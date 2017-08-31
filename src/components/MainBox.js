@@ -18,7 +18,8 @@ class MainBox extends React.Component {
             displayText: "What'll you buy today ?",
             searchResults: [],
             cartItems: [],
-            cartBoxText: "You have no item in your cart"
+            cartBoxText: "You have no item in your cart",
+            isShowLoader: false
         };
 
         this.getInputKey = this.getInputKey.bind(this);
@@ -32,16 +33,22 @@ class MainBox extends React.Component {
     }
 
     searchHandler() {
+
         this.setState({
-            isSearchBtnClicked: true
+            isSearchBtnClicked: true,
+            isShowLoader: true,
+            searchResults: []
         });
 
         if (_.isEmpty(this.state.inputKey)) {
-            this.setState({
-                isSearchFound: false,
-                searchResults: [],
-                displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
-            })
+            setTimeout(() => {
+                this.setState({
+                    isSearchFound: false,
+                    searchResults: [],
+                    displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?",
+                    isShowLoader: false
+                })
+            }, 2000)
         } else {
             HttpService.searchProduct(this.state.inputKey).then((response) => {
                 if (response.status === 200 && response.statusText === "OK") {
@@ -64,17 +71,19 @@ class MainBox extends React.Component {
                             this.setState({
                                 isSearchFound: true,
                                 searchResults: searchResults,
-                                displayText: ""
+                                displayText: "",
+                                isShowLoader: false
                             })
-                        }, 3000)
+                        }, 2000)
                     } else {
                         setTimeout(() => {
                             this.setState({
                                 isSearchFound: false,
                                 searchResults: [],
-                                displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?"
+                                displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?",
+                                isShowLoader: false
                             })
-                        }, 3000)
+                        }, 2000)
                     }
                 }
             }).catch((err) => {
@@ -103,9 +112,13 @@ class MainBox extends React.Component {
     render() {
         return (
             <div className="MainBox">
+
+
+
+
                 <div className="LeftGridFull">
                     <div className="LeftBox">
-                        <div className="container searchBox">
+                        <div className="searchBox">
                             <div className="input-group">
                                 <input type="text" className="form-control" onKeyUp={this.getInputKey}
                                        placeholder="Search..." name="search"/>
@@ -117,6 +130,13 @@ class MainBox extends React.Component {
                             </div>
                             <br/>
                         </div>
+
+                        <div className="LoadingBox">
+                            {
+                                this.state.isSearchBtnClicked && this.state.isShowLoader ? <LoadingComponent isSearchBtnClicked={this.state.isSearchBtnClicked}/> : null
+                            }
+                        </div>
+
                         <div className="SearchResultContainer">
                             {
                                 this.state.searchResults.map((item, index) => {
@@ -131,14 +151,14 @@ class MainBox extends React.Component {
                         </div>
                         <div className="MainTextBox">
                             <p>
-                                {this.state.isSearchBtnClicked && !this.state.isSearchFound ? null  : this.state.displayText}
+                                {this.state.isSearchBtnClicked && !this.state.isSearchFound && !this.state.isShowLoader ? "Sorry, the thing doesn't seem to exist. Try anything else ?"  : null}
+                            </p>
+
+                            <p>
+                                {!this.state.isSearchBtnClicked && !this.state.isShowLoader ? "What'll you buy today ?"  : null}
                             </p>
                         </div>
-                        <div className="LoadingBox">
-                            {
-                                this.state.isSearchBtnClicked ? <LoadingComponent isSearchBtnClicked={this.state.isSearchBtnClicked}/> : null
-                            }
-                        </div>
+
                     </div>
                 </div>
                 <div className="RightBox">

@@ -39,9 +39,6 @@ class ProductThumb extends React.Component {
                                 <div className="ProductTitle">
                                     <ProductTitle title={this.props.productData.title}/>
                                     <br/>
-                                    <span>
-                                        {this.props.productData.brand}
-                                    </span>
                                 </div>
 
                                 <p>
