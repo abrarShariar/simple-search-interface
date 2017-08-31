@@ -53,7 +53,7 @@ class CartBox extends React.Component {
                                             </div>
                                             <div className="priceGrid">
                                                 <strong>
-                                                    $ {item.price}
+                                                    ${item.price}
                                                 </strong>
                                             </div>
 
