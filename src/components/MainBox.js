@@ -15,7 +15,6 @@ class MainBox extends React.Component {
             inputKey: "",
             isSearchFound: false,
             isSearchBtnClicked: false,
-            displayText: "What'll you buy today ?",
             searchResults: [],
             cartItems: [],
             cartBoxText: "You have no item in your cart",
@@ -45,7 +44,6 @@ class MainBox extends React.Component {
                 this.setState({
                     isSearchFound: false,
                     searchResults: [],
-                    displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?",
                     isShowLoader: false
                 })
             }, 2000)
@@ -80,7 +78,6 @@ class MainBox extends React.Component {
                             this.setState({
                                 isSearchFound: false,
                                 searchResults: [],
-                                displayText: "Sorry, the thing doesn't seem to exist. Try anything else ?",
                                 isShowLoader: false
                             })
                         }, 2000)
@@ -133,7 +130,7 @@ class MainBox extends React.Component {
 
                         <div className="LoadingBox">
                             {
-                                this.state.isSearchBtnClicked && this.state.isShowLoader ? <LoadingComponent isSearchBtnClicked={this.state.isSearchBtnClicked}/> : null
+                                this.state.isSearchBtnClicked && this.state.isShowLoader ? <LoadingComponent/> : null
                             }
                         </div>
 
