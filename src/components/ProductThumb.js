@@ -1,22 +1,8 @@
 import React, {Component} from 'react';
-//component for a product thumb
 import './ProductThumb.css';
 
-function ProductTitle(props) {
-    let title = props.title;
-    if (props.title.length > 20) {
-        title = props.title.substring(0, 20);
-    }
 
-    return (
-        <span>
-        <u>
-            {title}
-        </u>
-        </span>
-    )
-}
-
+//component for a product thumb
 class ProductThumb extends React.Component {
 
     constructor(props) {
@@ -40,9 +26,8 @@ class ProductThumb extends React.Component {
                                     <ProductTitle title={this.props.productData.title}/>
                                     <br/>
                                 </div>
-
                                 <p>
-                                    <strong> $ {this.props.productData.price} </strong>
+                                    <strong> ${this.props.productData.price} </strong>
                                 </p>
                                 <p><button className="btn btn-warning" role="button"
                                       onClick={this.addToCartHandler}>Add to Cart</button>
@@ -54,6 +39,22 @@ class ProductThumb extends React.Component {
             </div>
         )
     }
+}
+
+// a ProductTitle
+function ProductTitle(props) {
+    let title = props.title;
+    if (props.title.length > 20) {
+        title = props.title.substring(0, 20);
+    }
+
+    return (
+        <span>
+        <u>
+            {title}
+        </u>
+        </span>
+    )
 }
 
 export default ProductThumb;

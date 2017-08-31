@@ -51,7 +51,6 @@ class MainBox extends React.Component {
             HttpService.searchProduct(this.state.inputKey).then((response) => {
                 if (response.status === 200 && response.statusText === "OK") {
                     if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
-
                         let searchResults = [];
                         _.each(response.data.hits.hits, (item) => {
                             let product = {
@@ -61,7 +60,7 @@ class MainBox extends React.Component {
                                 listPrice: item._source['listPrice'],
                                 salePrice: item._source['salePrice'],
                                 brand: item._source['brand'],
-                                thumb: item._source['images'][0],
+                                thumb: item._source['images'][0]
                             };
                             searchResults.push(product);
                         });
@@ -91,7 +90,23 @@ class MainBox extends React.Component {
 
     //callback to pass from child component - ProductThumb
     getAddToCartEvent = (productData) => {
-        this.state.cartItems.push(productData);
+
+        let duplicateProduct = _.find(this.state.cartItems, (item) => {
+            return item.id === productData.id;
+        });
+
+        if (!duplicateProduct) {
+            productData['quantity'] = 1;
+            this.state.cartItems.push(productData);
+        } else {
+            _.map(this.state.cartItems, (item, index) => {
+                if (item.id === productData.id) {
+                    item.quantity++;
+                    this.state.cartItems[index] = item;
+                }
+            });
+        }
+
         this.setState({
             cartItems: this.state.cartItems,
             cartBoxText: ""
@@ -144,11 +159,11 @@ class MainBox extends React.Component {
                         </div>
                         <div className="MainTextBox">
                             <p>
-                                {this.state.isSearchBtnClicked && !this.state.isSearchFound && !this.state.isShowLoader ? "Sorry, the thing doesn't seem to exist. Try anything else ?"  : null}
+                                {this.state.isSearchBtnClicked && !this.state.isSearchFound && !this.state.isShowLoader ? "Sorry, the thing doesn't seem to exist. Try anything else ?" : null}
                             </p>
 
                             <p>
-                                {!this.state.isSearchBtnClicked && !this.state.isShowLoader ? "What'll you buy today ?"  : null}
+                                {!this.state.isSearchBtnClicked && !this.state.isShowLoader ? "What'll you buy today ?" : null}
                             </p>
                         </div>
 
