@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './ProductThumb.css';
 
-
 //component for a product thumb
 class ProductThumb extends React.Component {
 

@@ -36,7 +36,6 @@ class MainBox extends React.Component {
 
         let searchData = this.props.actions.getInputKey();
 
-
         this.setState({
             isSearchBtnClicked: true,
             isShowLoader: true,
