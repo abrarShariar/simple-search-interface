@@ -5,13 +5,13 @@ import ProductThumb from './ProductThumb';
 import LoadingComponent from './LoadingComponent';
 import HttpService from '../HttpService';
 import * as _ from 'underscore';
-
 //react-redux stuffs
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as actions from '../actions/action';
 
-//component to be displayed with the search box and search results
+
 class MainBox extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -29,19 +29,21 @@ class MainBox extends React.Component {
     }
 
     getInputKey(e) {
-        this.setState({
-            inputKey: e.target.value
-        });
+        this.props.actions.setInputKey(e.target.value);
     }
 
     searchHandler() {
+
+        let searchData = this.props.actions.getInputKey();
+
+
         this.setState({
             isSearchBtnClicked: true,
             isShowLoader: true,
             searchResults: []
         });
 
-        if (_.isEmpty(this.state.inputKey)) {
+        if (_.isEmpty(searchData.payload.key)) {
             setTimeout(() => {
                 this.setState({
                     isSearchFound: false,
@@ -50,7 +52,7 @@ class MainBox extends React.Component {
                 })
             }, 2000)
         } else {
-            HttpService.searchProduct(this.state.inputKey).then((response) => {
+            HttpService.searchProduct(searchData.payload.key).then((response) => {
                 if (response.status === 200 && response.statusText === "OK") {
                     if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
                         let searchResults = [];
@@ -132,6 +134,7 @@ class MainBox extends React.Component {
                             <span className="glyphicon glyphicon-chevron-right"></span>
                         </button>
                     </div>
+
                     <div className="LeftBox">
                         <div className="searchBox">
                             <div className="input-group">
@@ -185,7 +188,15 @@ class MainBox extends React.Component {
 
 
 function mapStateToProps(state) {
-    return {}
+    return {
+        search_text: state.search_text
+    }
 }
 
-export default MainBox;
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainBox);

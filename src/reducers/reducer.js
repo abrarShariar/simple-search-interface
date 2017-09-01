@@ -1,7 +1,9 @@
 import {
     SEARCH_PRODUCT,
     ADD_TO_CART,
-    CLEAR_CART
+    CLEAR_CART,
+    SET_INPUT_KEY,
+    GET_INPUT_KEY
 } from '../actions/action';
 
 //defining initial state
@@ -18,6 +20,14 @@ function searchInterfaceApp(state = initialState, action) {
             return Object.assign({}, state, {
                 search_text: action.search_text,
                 searchResults: action.searchResults
+            })
+        case SET_INPUT_KEY:
+            return Object.assign({}, state, {
+                key: action.payload.key
+            })
+        case GET_INPUT_KEY:
+            return Object.assign({}, state, {
+                key: action.payload.key
             })
         case ADD_TO_CART:
             return Object.assign({}, state, {
@@ -40,7 +50,6 @@ function searchInterfaceApp(state = initialState, action) {
         default:
             return state
     }
-
     return state;
 }
 
