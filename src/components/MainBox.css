@@ -11,7 +11,7 @@
 
 .searchBox {
     margin-top: 50px;
-    padding: 30px 30px 30px 30px;
+    padding: 10px 30px 30px 30px;
 }
 
 .LeftBox {
@@ -49,5 +49,10 @@
 
 .LoadingBox {
     text-align: -webkit-center;
+}
+
+.ArrowBox{
+    text-align: -webkit-center;
+    margin-top: 20px;
 }
 

@@ -6,6 +6,9 @@ import LoadingComponent from './LoadingComponent';
 import HttpService from '../HttpService';
 import * as _ from 'underscore';
 
+//react-redux stuffs
+import {connect} from 'react-redux';
+
 //component to be displayed with the search box and search results
 class MainBox extends React.Component {
 
@@ -121,6 +124,14 @@ class MainBox extends React.Component {
         return (
             <div className="MainBox">
                 <div className="LeftGridFull">
+                    <div className="ArrowBox">
+                        <button>
+                            <span className="glyphicon glyphicon-chevron-left"></span>
+                        </button>
+                        <button>
+                            <span className="glyphicon glyphicon-chevron-right"></span>
+                        </button>
+                    </div>
                     <div className="LeftBox">
                         <div className="searchBox">
                             <div className="input-group">
@@ -170,6 +181,11 @@ class MainBox extends React.Component {
             </div>
         )
     }
+}
+
+
+function mapStateToProps(state) {
+    return {}
 }
 
 export default MainBox;

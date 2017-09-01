@@ -2,7 +2,7 @@ import {
     SEARCH_PRODUCT,
     ADD_TO_CART,
     CLEAR_CART
-} from '../action';
+} from '../actions/action';
 
 //defining initial state
 const initialState = {
@@ -11,7 +11,7 @@ const initialState = {
     cart_items: []
 }
 
-function searchInterfaceApp(state = undefined, action) {
+function searchInterfaceApp(state = initialState, action) {
 
     switch (action.type) {
         case SEARCH_PRODUCT:
