@@ -26,14 +26,11 @@ class CartBox extends React.Component {
                     </div>
                     <div className="RightGrid">
                     <span id="clearCart">
-
                         {this.props.cartItems.length > 0 ? <a type="button" className="btn btn-link" onClick={this.clearCartHandler}>
                             Clear Cart
                         </a> : <a disabled type="button" className="btn btn-link" onClick={this.clearCartHandler}>
                             Clear Cart
                         </a>}
-
-
                     </span>
                         <br/><br/>
                     </div>
@@ -66,14 +63,11 @@ class CartBox extends React.Component {
                         }
                     </ol>
                 </div>
-
                 <div className="TextBox">
                     <p>
                         {this.props.displayText}
                     </p>
                 </div>
-
-
             </div>
         )
     }

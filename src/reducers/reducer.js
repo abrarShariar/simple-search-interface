@@ -5,7 +5,8 @@ import {
     SET_INPUT_KEY,
     GET_INPUT_KEY,
     REQUEST_PRODUCTS,
-    RECEIVE_PRODUCTS
+    RECEIVE_PRODUCTS,
+    GET_HISTORY
 } from '../actions/action';
 
 //defining initial state
@@ -18,23 +19,34 @@ import {
 let historyIndex = 0;
 const initialState = {
     index: 0,
-    history: {
-        query: "",
-        isFetching: false,
-        searchResults: [],
-        cartItems: []
-    }
+    query: "",
+    isFetching: false,
+    searchResults: [],
+    cartItems: []
 }
+
+
+let history = [];
 
 function searchInterfaceApp(state = initialState, action) {
 
     switch (action.type) {
+
+        case GET_HISTORY:
+            return history
+
         case REQUEST_PRODUCTS:
             return Object.assign({}, state, {
                 isFetching: true
             })
 
         case RECEIVE_PRODUCTS:
+            history.push({
+                searchQuery: action.search_query,
+                searchResults: action.searchResults,
+                lastUpdated: action.receivedAt
+            });
+
             return Object.assign({}, state, {
                 index: ++historyIndex,
                 isFetching: false,

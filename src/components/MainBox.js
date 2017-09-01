@@ -33,8 +33,10 @@ class MainBox extends React.Component {
     }
 
     searchHandler() {
-
         let searchData = this.props.actions.getInputKey();
+        // this.props.actions.fetchProducts(searchData.payload.key).then(() => {
+        //     console.log(this.props.store.getState());
+        // })
 
         this.setState({
             isSearchBtnClicked: true,
@@ -188,7 +190,7 @@ class MainBox extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        search_text: state.search_text
+        store: state.store
     }
 }
 

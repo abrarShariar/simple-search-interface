@@ -1,12 +1,14 @@
 /*
  * action types
  */
+
 export const SEARCH_PRODUCT = 'SEARCH_PRODUCT'
 export const ADD_TO_CART = 'ADD_TO_CART'
 export const CLEAR_CART = 'CLEAR_CART'
 export const SET_INPUT_KEY = 'SET_INPUT_KEY'
 export const GET_INPUT_KEY = 'GET_INPUT_KEY'
 export const FETCH_PRODUCT = 'FETCH_PRODUCT'
+export const GET_HISTORY = 'GET_HISTORY'
 
 //actions handled by network requests
 export const REQUEST_PRODUCTS = 'REQUEST_PRODUCTS'
@@ -73,21 +75,24 @@ export function receiveProducts(product, json) {
 }
 
 export function fetchProducts(search_query) {
-
     return function (dispatch) {
-
         dispatch(requestProducts(search_query));
-
+        let data = {};
         return fetch(`http://es.backpackbang.com:9200/products/amazon/_search?q=title:${search_query}`)
             .then(
                 (response) => response.json(),
                 (error) => console.log('An error occured.', error)
             )
             .then((json) => {
-                dispatch(receiveProducts(search_query,json))
+                dispatch(receiveProducts(search_query, json.hits))
             })
     }
+}
 
+export function getHistory() {
+    return {
+        type: GET_HISTORY
+    }
 }
 
 
