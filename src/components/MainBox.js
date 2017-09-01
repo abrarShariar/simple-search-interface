@@ -10,10 +10,13 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from '../actions/action';
 
+let searchResults = [];
+let currentTime = 0;
 
 class MainBox extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             inputKey: "",
             isSearchFound: false,
@@ -26,6 +29,8 @@ class MainBox extends React.Component {
 
         this.getInputKey = this.getInputKey.bind(this);
         this.searchHandler = this.searchHandler.bind(this);
+        this.goBackHandler = this.goBackHandler.bind(this);
+        this.goForwardHandler = this.goForwardHandler.bind(this);
     }
 
     getInputKey(e) {
@@ -33,16 +38,8 @@ class MainBox extends React.Component {
     }
 
     searchHandler() {
+        searchResults = [];
         let searchData = this.props.actions.getInputKey();
-        // this.props.actions.fetchProducts(searchData.payload.key).then(() => {
-        //     console.log(this.props.store.getState());
-        // })
-
-        this.setState({
-            isSearchBtnClicked: true,
-            isShowLoader: true,
-            searchResults: []
-        });
 
         if (_.isEmpty(searchData.payload.key)) {
             setTimeout(() => {
@@ -52,45 +49,84 @@ class MainBox extends React.Component {
                     isShowLoader: false
                 })
             }, 2000)
-        } else {
-            HttpService.searchProduct(searchData.payload.key).then((response) => {
-                if (response.status === 200 && response.statusText === "OK") {
-                    if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
-                        let searchResults = [];
-                        _.each(response.data.hits.hits, (item) => {
-                            let product = {
-                                id: item['_id'],
-                                title: item._source['title'],
-                                price: item._source['price'],
-                                listPrice: item._source['listPrice'],
-                                salePrice: item._source['salePrice'],
-                                brand: item._source['brand'],
-                                thumb: item._source['images'][0]
-                            };
-                            searchResults.push(product);
-                        });
-                        setTimeout(() => {
-                            this.setState({
-                                isSearchFound: true,
-                                searchResults: searchResults,
-                                displayText: "",
-                                isShowLoader: false
-                            })
-                        }, 2000)
-                    } else {
-                        setTimeout(() => {
-                            this.setState({
-                                isSearchFound: false,
-                                searchResults: [],
-                                isShowLoader: false
-                            })
-                        }, 2000)
-                    }
-                }
-            }).catch((err) => {
-                console.log(err);
-            });
         }
+        else {
+            this.props.actions.fetchProducts(searchData.payload.key)
+                .then((data) => {
+                    let result = this.props.actions.receiveProducts(searchData.payload.key, data.hits);
+                    _.each(result.searchResults.hits, (item) => {
+                        let product = {
+                            id: item['_id'],
+                            title: item._source['title'],
+                            price: item._source['price'],
+                            listPrice: item._source['listPrice'],
+                            salePrice: item._source['salePrice'],
+                            brand: item._source['brand'],
+                            thumb: item._source['images'][0]
+                        };
+                        searchResults.push(product);
+                    })
+                    this.props.actions.saveSearchResults(searchData.payload.key, searchResults);
+                })
+                .catch((err) => {
+                    if (err) {
+                        console.log("Promise error");
+                    }
+                });
+        }
+        // this.setState({
+        //     isSearchBtnClicked: true,
+        //     isShowLoader: true,
+        //     searchResults: []
+        // });
+
+        // if (_.isEmpty(searchData.payload.key)) {
+        //     setTimeout(() => {
+        //         this.setState({
+        //             isSearchFound: false,
+        //             searchResults: [],
+        //             isShowLoader: false
+        //         })
+        //     }, 2000)
+        // } else {
+        //     HttpService.searchProduct(searchData.payload.key).then((response) => {
+        //         if (response.status === 200 && response.statusText === "OK") {
+        //             if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
+        //                 let searchResults = [];
+        //                 _.each(response.data.hits.hits, (item) => {
+        //                     let product = {
+        //                         id: item['_id'],
+        //                         title: item._source['title'],
+        //                         price: item._source['price'],
+        //                         listPrice: item._source['listPrice'],
+        //                         salePrice: item._source['salePrice'],
+        //                         brand: item._source['brand'],
+        //                         thumb: item._source['images'][0]
+        //                     };
+        //                     searchResults.push(product);
+        //                 });
+        //                 setTimeout(() => {
+        //                     this.setState({
+        //                         isSearchFound: true,
+        //                         searchResults: searchResults,
+        //                         displayText: "",
+        //                         isShowLoader: false
+        //                     })
+        //                 }, 2000)
+        //             } else {
+        //                 setTimeout(() => {
+        //                     this.setState({
+        //                         isSearchFound: false,
+        //                         searchResults: [],
+        //                         isShowLoader: false
+        //                     })
+        //                 }, 2000)
+        //             }
+        //         }
+        //     }).catch((err) => {
+        //         console.log(err);
+        //     });
+        // }
     }
 
     //callback to pass from child component - ProductThumb
@@ -123,15 +159,28 @@ class MainBox extends React.Component {
         });
     }
 
+
+    //go back handler
+    goBackHandler(){
+       currentTime < 0 ? 0 : currentTime--;
+       searchResults = this.props.actions.getHistory(currentTime).payload.searchResults;
+    }
+
+    //go back hanlder
+    goForwardHandler(){
+        currentTime++;
+        searchResults = this.props.actions.getHistory(currentTime).payload.searchResults;
+    }
+
     render() {
         return (
             <div className="MainBox">
                 <div className="LeftGridFull">
                     <div className="ArrowBox">
-                        <button>
+                        <button onClick={this.goForwardHandler}>
                             <span className="glyphicon glyphicon-chevron-left"></span>
                         </button>
-                        <button>
+                        <button onClick={this.goBackHandler}>
                             <span className="glyphicon glyphicon-chevron-right"></span>
                         </button>
                     </div>
@@ -156,13 +205,13 @@ class MainBox extends React.Component {
                         </div>
                         <div className="SearchResultContainer">
                             {
-                                this.state.searchResults.map((item, index) => {
+                                searchResults.map((item) => {
                                     return (
                                         <div className="ProductThumbContainer">
                                             <ProductThumb productData={item}
                                                           addToCartCallback={this.getAddToCartEvent}/>
                                         </div>
-                                    );
+                                    )
                                 })
                             }
                         </div>
@@ -190,7 +239,8 @@ class MainBox extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        store: state.store
+        store: state,
+        searchResults: {}
     }
 }
 

@@ -6,6 +6,8 @@ import {
     GET_INPUT_KEY,
     REQUEST_PRODUCTS,
     RECEIVE_PRODUCTS,
+    SAVE_SEARCH_RESUTLS,
+    GET_SEARCH_RESULTS,
     GET_HISTORY
 } from '../actions/action';
 
@@ -26,27 +28,27 @@ const initialState = {
 }
 
 
-let history = [];
-
 function searchInterfaceApp(state = initialState, action) {
-
     switch (action.type) {
 
         case GET_HISTORY:
-            return history
-
+            return Object.assign({}, state, {
+                searchResults: action.payload.searchResults
+            })
+        case GET_SEARCH_RESULTS:
+            return Object.assign({}, state, {
+                searchResults: action.payload.searchResults
+            })
+        case SAVE_SEARCH_RESUTLS:
+            return Object.assign({}, state, {
+                searchResults: action.searchResults
+            })
         case REQUEST_PRODUCTS:
             return Object.assign({}, state, {
                 isFetching: true
             })
 
         case RECEIVE_PRODUCTS:
-            history.push({
-                searchQuery: action.search_query,
-                searchResults: action.searchResults,
-                lastUpdated: action.receivedAt
-            });
-
             return Object.assign({}, state, {
                 index: ++historyIndex,
                 isFetching: false,
