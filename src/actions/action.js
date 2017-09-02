@@ -103,14 +103,17 @@ export function getHistory(index) {
     return {
         type: GET_HISTORY,
         payload: {
-            searchResults: history[index]
+            history: history[index]
         }
     }
 }
 
 export function saveSearchResults(searchQuery, searchResults) {
     historyIndex++;
-    history.push(searchResults);
+    history.push({
+        searchQuery: searchQuery,
+        searchResults : searchResults
+    });
     return {
         type: SAVE_SEARCH_RESUTLS,
         payload: {

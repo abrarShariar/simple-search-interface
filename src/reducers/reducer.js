@@ -11,13 +11,6 @@ import {
     GET_HISTORY
 } from '../actions/action';
 
-//defining initial state
-// const initialState = {
-//     search_text: "",
-//     search_results: [],
-//     cart_items: []
-// }
-
 let historyIndex = 0;
 const initialState = {
     index: 0,
@@ -27,10 +20,8 @@ const initialState = {
     cartItems: []
 }
 
-
 function searchInterfaceApp(state = initialState, action) {
     switch (action.type) {
-
         case GET_HISTORY:
             return Object.assign({}, state, {
                 searchResults: action.payload.searchResults
@@ -47,7 +38,6 @@ function searchInterfaceApp(state = initialState, action) {
             return Object.assign({}, state, {
                 isFetching: true
             })
-
         case RECEIVE_PRODUCTS:
             return Object.assign({}, state, {
                 index: ++historyIndex,

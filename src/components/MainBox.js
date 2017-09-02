@@ -12,6 +12,11 @@ import * as actions from '../actions/action';
 
 let searchResults = [];
 let currentTime = 0;
+let totalSearchHits = 0;
+
+//this will contain all UI states at any point of time
+let SuperData = [];
+let currentQuery = "";
 
 class MainBox extends React.Component {
     constructor(props) {
@@ -38,6 +43,8 @@ class MainBox extends React.Component {
     }
 
     searchHandler() {
+        currentTime = totalSearchHits;
+        totalSearchHits++;
         searchResults = [];
         let searchData = this.props.actions.getInputKey();
 
@@ -161,15 +168,30 @@ class MainBox extends React.Component {
 
 
     //go back handler
-    goBackHandler(){
-       currentTime < 0 ? 0 : currentTime--;
-       searchResults = this.props.actions.getHistory(currentTime).payload.searchResults;
+    goBackHandler() {
+        searchResults = [];
+        currentTime--;
+        if(currentTime < 0){
+            currentTime = 0;
+        }else{
+            searchResults = this.props.actions.getHistory(currentTime).payload.history.searchResults;
+            currentQuery = this.props.actions.getHistory(currentTime).payload.history.searchQuery;
+            document.getElementById("search-input").value = currentQuery;
+        }
     }
 
     //go back hanlder
-    goForwardHandler(){
+    goForwardHandler() {
+        searchResults = [];
         currentTime++;
-        searchResults = this.props.actions.getHistory(currentTime).payload.searchResults;
+        if(currentTime >= totalSearchHits){
+            currentTime = totalSearchHits-1;
+        }else{
+            searchResults = this.props.actions.getHistory(currentTime).payload.history.searchResults;
+            currentQuery = this.props.actions.getHistory(currentTime).payload.history.searchQuery;
+            document.getElementById("search-input").value = currentQuery;
+        }
+
     }
 
     render() {
@@ -177,10 +199,10 @@ class MainBox extends React.Component {
             <div className="MainBox">
                 <div className="LeftGridFull">
                     <div className="ArrowBox">
-                        <button onClick={this.goForwardHandler}>
+                        <button onClick={this.goBackHandler}>
                             <span className="glyphicon glyphicon-chevron-left"></span>
                         </button>
-                        <button onClick={this.goBackHandler}>
+                        <button onClick={this.goForwardHandler}>
                             <span className="glyphicon glyphicon-chevron-right"></span>
                         </button>
                     </div>
@@ -189,7 +211,7 @@ class MainBox extends React.Component {
                         <div className="searchBox">
                             <div className="input-group">
                                 <input type="text" className="form-control" onKeyUp={this.getInputKey}
-                                       placeholder="Search..." name="search"/>
+                                       placeholder="Search..." name="search" id="search-input"/>
                                 <div className="input-group-btn">
                                     <button className="btn btn-success" type="button" onClick={this.searchHandler}>
                                         Search
