@@ -13,14 +13,12 @@ import * as actions from '../actions/action';
 let searchResults = [];
 let currentTime = 0;
 let totalSearchHits = 0;
-
-//this will contain all UI states at any point of time
-let SuperData = [];
 let currentQuery = "";
 let isSearchBtnClicked = false;
 let isShowLoader = false;
 let isSearchFound = false;
-
+let cartItems = [];
+let cartBoxText = "You have no item in your cart";
 
 class MainBox extends React.Component {
     constructor(props) {
@@ -35,6 +33,14 @@ class MainBox extends React.Component {
             cartBoxText: "You have no item in your cart",
             isShowLoader: false
         };
+
+        cartItems = [];
+        isSearchFound = false;
+        isSearchBtnClicked = false;
+        searchResults = [];
+        cartItems = [];
+        cartBoxText = "You have no item in your cart";
+        isShowLoader = false;
 
         this.getInputKey = this.getInputKey.bind(this);
         this.searchHandler = this.searchHandler.bind(this);
@@ -92,89 +98,34 @@ class MainBox extends React.Component {
                     }
                 });
         }
-        // this.setState({
-        //     isSearchBtnClicked: true,
-        //     isShowLoader: true,
-        //     searchResults: []
-        // });
-
-        // if (_.isEmpty(searchData.payload.key)) {
-        //     setTimeout(() => {
-        //         this.setState({
-        //             isSearchFound: false,
-        //             searchResults: [],
-        //             isShowLoader: false
-        //         })
-        //     }, 2000)
-        // } else {
-        //     HttpService.searchProduct(searchData.payload.key).then((response) => {
-        //         if (response.status === 200 && response.statusText === "OK") {
-        //             if (response.data.hits.hits.length > 0 && response.data.hits.total !== 0) {
-        //                 let searchResults = [];
-        //                 _.each(response.data.hits.hits, (item) => {
-        //                     let product = {
-        //                         id: item['_id'],
-        //                         title: item._source['title'],
-        //                         price: item._source['price'],
-        //                         listPrice: item._source['listPrice'],
-        //                         salePrice: item._source['salePrice'],
-        //                         brand: item._source['brand'],
-        //                         thumb: item._source['images'][0]
-        //                     };
-        //                     searchResults.push(product);
-        //                 });
-        //                 setTimeout(() => {
-        //                     this.setState({
-        //                         isSearchFound: true,
-        //                         searchResults: searchResults,
-        //                         displayText: "",
-        //                         isShowLoader: false
-        //                     })
-        //                 }, 2000)
-        //             } else {
-        //                 setTimeout(() => {
-        //                     this.setState({
-        //                         isSearchFound: false,
-        //                         searchResults: [],
-        //                         isShowLoader: false
-        //                     })
-        //                 }, 2000)
-        //             }
-        //         }
-        //     }).catch((err) => {
-        //         console.log(err);
-        //     });
-        // }
     }
 
     //callback to pass from child component - ProductThumb
     getAddToCartEvent = (productData) => {
-        let duplicateProduct = _.find(this.state.cartItems, (item) => {
+        cartBoxText = "";
+        let duplicateProduct = _.find(cartItems, (item) => {
             return item.id === productData.id;
         });
         if (!duplicateProduct) {
             productData['quantity'] = 1;
-            this.state.cartItems.push(productData);
+            cartItems.push(productData);
         } else {
             _.map(this.state.cartItems, (item, index) => {
                 if (item.id === productData.id) {
                     item.quantity++;
-                    this.state.cartItems[index] = item;
+                    cartItems[index] = item;
                 }
             });
         }
-        this.setState({
-            cartItems: this.state.cartItems,
-            cartBoxText: ""
-        });
+
+        this.props.actions.addToCart(currentTime, cartItems)
     }
 
     //callback to pass from child component - CartBox
     clearCartEvent = () => {
-        this.setState({
-            cartItems: [],
-            cartBoxText: "You have no item in your cart"
-        });
+        cartBoxText = "You have no item in your cart";
+        cartItems = [];
+        this.props.actions.clearCart();
     }
 
     //go back handler
@@ -184,6 +135,7 @@ class MainBox extends React.Component {
         if (currentTime < 0) {
             currentTime = 0;
         } else {
+            cartItems = this.props.actions.getHistory(currentTime).payload.history.cartItems;
             searchResults = this.props.actions.getHistory(currentTime).payload.history.searchResults;
             currentQuery = this.props.actions.getHistory(currentTime).payload.history.searchQuery;
             document.getElementById("search-input").value = currentQuery;
@@ -192,11 +144,13 @@ class MainBox extends React.Component {
 
     //go back hanlder
     goForwardHandler() {
+        cartItems = [];
         searchResults = [];
         currentTime++;
         if (currentTime >= totalSearchHits) {
             currentTime = totalSearchHits - 1;
         } else {
+            cartItems = this.props.actions.getHistory(currentTime).payload.history.cartItems;
             searchResults = this.props.actions.getHistory(currentTime).payload.history.searchResults;
             currentQuery = this.props.actions.getHistory(currentTime).payload.history.searchQuery;
             document.getElementById("search-input").value = currentQuery;
@@ -258,7 +212,7 @@ class MainBox extends React.Component {
                     </div>
                 </div>
                 <div className="RightBox">
-                    <CartBox displayText={this.state.cartBoxText} cartItems={this.state.cartItems}
+                    <CartBox displayText={this.state.cartBoxText} cartItems={cartItems}
                              clearCartCallback={this.clearCartEvent}/>
                 </div>
             </div>

@@ -50,12 +50,22 @@ export function getInputKey() {
     }
 }
 
-export function addToCart(productId) {
-    return {type: ADD_TO_CART, productId}
+export function addToCart(historyIndex,cartItems) {
+    history[historyIndex].cartItems = cartItems;
+
+    return {
+        type: ADD_TO_CART,
+        payload: {
+            historyIndex: historyIndex,
+            cartItems: cartItems
+        }
+    }
 }
 
-export function clearCart(productId) {
-    return {type: CLEAR_CART, productId}
+export function clearCart() {
+    return {
+        type: CLEAR_CART
+    }
 }
 
 
@@ -93,10 +103,10 @@ export function fetchProducts(search_query) {
 }
 
 export function getHistory(index) {
-    if(index < 0){
+    if (index < 0) {
         index = 0;
     }
-    else if(index >= history.length){
+    else if (index >= history.length) {
         index = history.length - 1;
     }
 
@@ -112,7 +122,8 @@ export function saveSearchResults(searchQuery, searchResults) {
     historyIndex++;
     history.push({
         searchQuery: searchQuery,
-        searchResults : searchResults
+        searchResults: searchResults,
+        cartItems: []
     });
     return {
         type: SAVE_SEARCH_RESUTLS,
@@ -133,7 +144,7 @@ export function getSearchResults() {
 }
 
 
-export function toggleLoader(){
+export function toggleLoader() {
     return {
         type: TOGGLE_LOADER
     }

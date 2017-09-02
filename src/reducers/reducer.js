@@ -60,21 +60,12 @@ function searchInterfaceApp(state = initialState, action) {
             })
         case ADD_TO_CART:
             return Object.assign({}, state, {
-                cartItems: [
-                    ...state.cartItems,
-                    {
-                        text: action.text
-                    }
-                ]
+               historyIndex: action.payload.historyIndex,
+               cartItems: action.payload.cartItems
             })
         case CLEAR_CART:
             return Object.assign({}, state, {
-                cartItems: [
-                    ...state.cartItems,
-                    {
-                        text: action.text
-                    }
-                ]
+                action: "Clear Cart"
             })
         default:
             return state
