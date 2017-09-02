@@ -12,11 +12,11 @@ import {fetchProducts, getHistory} from './actions/action';
 import searchInterfaceApp from './reducers/reducer';
 import registerServiceWorker from './registerServiceWorker';
 
-const loggerMiddleware = createLogger()
+// const loggerMiddleware = createLogger()
 
 const store = createStore(searchInterfaceApp, applyMiddleware(
     thunkMiddleware, // lets us dispatch() functions
-    loggerMiddleware // neat middleware that logs actions
+    // loggerMiddleware // neat middleware that logs actions
 ));
 
 ReactDOM.render(

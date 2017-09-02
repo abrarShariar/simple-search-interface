@@ -50,9 +50,8 @@ export function getInputKey() {
     }
 }
 
-export function addToCart(historyIndex,cartItems) {
+export function addToCart(historyIndex, cartItems) {
     history[historyIndex].cartItems = cartItems;
-
     return {
         type: ADD_TO_CART,
         payload: {
@@ -62,7 +61,8 @@ export function addToCart(historyIndex,cartItems) {
     }
 }
 
-export function clearCart() {
+export function clearCart(historyIndex) {
+    history[historyIndex].cartItems = [];
     return {
         type: CLEAR_CART
     }
@@ -118,11 +118,13 @@ export function getHistory(index) {
 
 export function saveSearchResults(searchQuery, searchResults) {
     historyIndex++;
+
     history.push({
         searchQuery: searchQuery,
         searchResults: searchResults,
         cartItems: []
     });
+
     return {
         type: SAVE_SEARCH_RESUTLS,
         payload: {
@@ -130,7 +132,6 @@ export function saveSearchResults(searchQuery, searchResults) {
         }
     }
 }
-
 
 export function getSearchResults() {
     return {
@@ -140,7 +141,6 @@ export function getSearchResults() {
         }
     }
 }
-
 
 export function toggleLoader() {
     return {

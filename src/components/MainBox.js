@@ -24,16 +24,6 @@ class MainBox extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            inputKey: "",
-            isSearchFound: false,
-            isSearchBtnClicked: false,
-            searchResults: [],
-            cartItems: [],
-            cartBoxText: "You have no item in your cart",
-            isShowLoader: false
-        };
-
         cartItems = [];
         isSearchFound = false;
         isSearchBtnClicked = false;
@@ -116,7 +106,6 @@ class MainBox extends React.Component {
                 }
             });
         }
-
         this.props.actions.addToCart(currentTime, cartItems)
     }
 
@@ -124,7 +113,7 @@ class MainBox extends React.Component {
     clearCartEvent = () => {
         cartBoxText = "You have no item in your cart";
         cartItems = [];
-        this.props.actions.clearCart();
+        this.props.actions.clearCart(currentTime);
     }
 
     //go back handler
@@ -143,7 +132,6 @@ class MainBox extends React.Component {
 
     //go back hanlder
     goForwardHandler() {
-        cartItems = [];
         searchResults = [];
         currentTime++;
         if (currentTime >= totalSearchHits) {
@@ -168,7 +156,6 @@ class MainBox extends React.Component {
                             <span className="glyphicon glyphicon-chevron-right"></span>
                         </button>
                     </div>
-
                     <div className="LeftBox">
                         <div className="searchBox">
                             <div className="input-group">
@@ -207,7 +194,6 @@ class MainBox extends React.Component {
                                 {!isSearchBtnClicked && !isShowLoader ? "What'll you buy today ?" : null}
                             </p>
                         </div>
-
                     </div>
                 </div>
                 <div className="RightBox">
