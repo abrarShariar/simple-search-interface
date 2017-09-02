@@ -17,7 +17,12 @@ export const SAVE_SEARCH_RESUTLS = 'SAVE_SEARCH_RESUTLS'
 export const TOGGLE_LOADER = 'TOGGLE_LOADER'
 
 let inputKeys = [];
-let history = [];
+let history = [
+    {   searchQuery: "",
+        searchResults: [],
+        cartItems: []
+    }
+]
 let historyIndex = 0;
 //this is the action for getting the search results
 export function fetchProduct(query = null) {
@@ -117,8 +122,10 @@ export function getHistory(index) {
 }
 
 export function saveSearchResults(searchQuery, searchResults) {
-    historyIndex++;
 
+    console.log(history);
+
+    historyIndex++;
     history.push({
         searchQuery: searchQuery,
         searchResults: searchResults,

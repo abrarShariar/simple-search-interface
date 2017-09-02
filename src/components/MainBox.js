@@ -20,6 +20,7 @@ let isSearchFound = false;
 let cartItems = [];
 let cartBoxText = "You have no item in your cart";
 
+
 class MainBox extends React.Component {
     constructor(props) {
         super(props);
@@ -43,8 +44,8 @@ class MainBox extends React.Component {
     }
 
     searchHandler() {
-        currentTime = totalSearchHits;
         totalSearchHits++;
+        currentTime = totalSearchHits;
         searchResults = [];
         isSearchBtnClicked = true;
         isShowLoader = true;
@@ -134,7 +135,7 @@ class MainBox extends React.Component {
     goForwardHandler() {
         searchResults = [];
         currentTime++;
-        if (currentTime >= totalSearchHits) {
+        if (currentTime > totalSearchHits) {
             currentTime = totalSearchHits - 1;
         } else {
             cartItems = this.props.actions.getHistory(currentTime).payload.history.cartItems;
@@ -191,7 +192,7 @@ class MainBox extends React.Component {
                                 {isSearchBtnClicked && !isSearchFound && !isShowLoader ? "Sorry, the thing doesn't seem to exist. Try anything else ?" : null}
                             </p>
                             <p>
-                                {!isSearchBtnClicked && !isShowLoader ? "What'll you buy today ?" : null}
+                                {currentTime === 0 ? "What'll you buy today ?" : null}
                             </p>
                         </div>
                     </div>
