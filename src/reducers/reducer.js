@@ -8,7 +8,8 @@ import {
     RECEIVE_PRODUCTS,
     SAVE_SEARCH_RESUTLS,
     GET_SEARCH_RESULTS,
-    GET_HISTORY
+    GET_HISTORY,
+    TOGGLE_LOADER
 } from '../actions/action';
 
 let historyIndex = 0;
@@ -19,9 +20,13 @@ const initialState = {
     searchResults: [],
     cartItems: []
 }
-
+let loader = 0;
 function searchInterfaceApp(state = initialState, action) {
     switch (action.type) {
+        case TOGGLE_LOADER:
+            return Object.assign({}, state, {
+                loader: !loader
+            })
         case GET_HISTORY:
             return Object.assign({}, state, {
                 searchResults: action.payload.searchResults

@@ -17,6 +17,10 @@ let totalSearchHits = 0;
 //this will contain all UI states at any point of time
 let SuperData = [];
 let currentQuery = "";
+let isSearchBtnClicked = false;
+let isShowLoader = false;
+let isSearchFound = false;
+
 
 class MainBox extends React.Component {
     constructor(props) {
@@ -46,15 +50,18 @@ class MainBox extends React.Component {
         currentTime = totalSearchHits;
         totalSearchHits++;
         searchResults = [];
+        isSearchBtnClicked = true;
+        isShowLoader = true;
+
         let searchData = this.props.actions.getInputKey();
 
         if (_.isEmpty(searchData.payload.key)) {
+            isShowLoader = false;
             setTimeout(() => {
-                this.setState({
-                    isSearchFound: false,
-                    searchResults: [],
-                    isShowLoader: false
-                })
+                isSearchFound = false;
+                searchResults = [];
+                isShowLoader = false;
+                this.props.actions.toggleLoader();
             }, 2000)
         }
         else {
@@ -73,7 +80,11 @@ class MainBox extends React.Component {
                         };
                         searchResults.push(product);
                     })
-                    this.props.actions.saveSearchResults(searchData.payload.key, searchResults);
+                    setTimeout(()=>{
+                        isSearchFound =  true;
+                        isShowLoader = false;
+                        this.props.actions.saveSearchResults(searchData.payload.key, searchResults);
+                    },2000)
                 })
                 .catch((err) => {
                     if (err) {
@@ -166,14 +177,13 @@ class MainBox extends React.Component {
         });
     }
 
-
     //go back handler
     goBackHandler() {
         searchResults = [];
         currentTime--;
-        if(currentTime < 0){
+        if (currentTime < 0) {
             currentTime = 0;
-        }else{
+        } else {
             searchResults = this.props.actions.getHistory(currentTime).payload.history.searchResults;
             currentQuery = this.props.actions.getHistory(currentTime).payload.history.searchQuery;
             document.getElementById("search-input").value = currentQuery;
@@ -184,14 +194,13 @@ class MainBox extends React.Component {
     goForwardHandler() {
         searchResults = [];
         currentTime++;
-        if(currentTime >= totalSearchHits){
-            currentTime = totalSearchHits-1;
-        }else{
+        if (currentTime >= totalSearchHits) {
+            currentTime = totalSearchHits - 1;
+        } else {
             searchResults = this.props.actions.getHistory(currentTime).payload.history.searchResults;
             currentQuery = this.props.actions.getHistory(currentTime).payload.history.searchQuery;
             document.getElementById("search-input").value = currentQuery;
         }
-
     }
 
     render() {
@@ -222,7 +231,7 @@ class MainBox extends React.Component {
                         </div>
                         <div className="LoadingBox">
                             {
-                                this.state.isSearchBtnClicked && this.state.isShowLoader ? <LoadingComponent/> : null
+                                isSearchBtnClicked && isShowLoader ? <LoadingComponent/> : null
                             }
                         </div>
                         <div className="SearchResultContainer">
@@ -239,11 +248,10 @@ class MainBox extends React.Component {
                         </div>
                         <div className="MainTextBox">
                             <p>
-                                {this.state.isSearchBtnClicked && !this.state.isSearchFound && !this.state.isShowLoader ? "Sorry, the thing doesn't seem to exist. Try anything else ?" : null}
+                                {isSearchBtnClicked && !isSearchFound && !isShowLoader ? "Sorry, the thing doesn't seem to exist. Try anything else ?" : null}
                             </p>
-
                             <p>
-                                {!this.state.isSearchBtnClicked && !this.state.isShowLoader ? "What'll you buy today ?" : null}
+                                {!isSearchBtnClicked && !isShowLoader ? "What'll you buy today ?" : null}
                             </p>
                         </div>
 

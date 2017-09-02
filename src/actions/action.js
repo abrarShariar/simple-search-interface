@@ -14,7 +14,7 @@ export const GET_SEARCH_RESULTS = 'GET_SEARCH_RESULTS'
 export const REQUEST_PRODUCTS = 'REQUEST_PRODUCTS'
 export const RECEIVE_PRODUCTS = 'RECEIVE_PRODUCTS'
 export const SAVE_SEARCH_RESUTLS = 'SAVE_SEARCH_RESUTLS'
-
+export const TOGGLE_LOADER = 'TOGGLE_LOADER'
 
 let inputKeys = [];
 let history = [];
@@ -129,6 +129,13 @@ export function getSearchResults() {
         payload: {
             searchResults: history[history.length - 1]
         }
+    }
+}
+
+
+export function toggleLoader(){
+    return {
+        type: TOGGLE_LOADER
     }
 }
 
