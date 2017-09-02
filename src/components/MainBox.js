@@ -60,7 +60,6 @@ class MainBox extends React.Component {
         isShowLoader = true;
 
         let searchData = this.props.actions.getInputKey();
-
         if (_.isEmpty(searchData.payload.key)) {
             isShowLoader = false;
             setTimeout(() => {
@@ -85,12 +84,12 @@ class MainBox extends React.Component {
                             thumb: item._source['images'][0]
                         };
                         searchResults.push(product);
-                    })
-                    setTimeout(()=>{
-                        isSearchFound =  true;
+                    });
+                    setTimeout(() => {
+                        isSearchFound = true;
                         isShowLoader = false;
                         this.props.actions.saveSearchResults(searchData.payload.key, searchResults);
-                    },2000)
+                    }, 2000)
                 })
                 .catch((err) => {
                     if (err) {
@@ -110,7 +109,7 @@ class MainBox extends React.Component {
             productData['quantity'] = 1;
             cartItems.push(productData);
         } else {
-            _.map(this.state.cartItems, (item, index) => {
+            _.map(cartItems, (item, index) => {
                 if (item.id === productData.id) {
                     item.quantity++;
                     cartItems[index] = item;
@@ -212,7 +211,7 @@ class MainBox extends React.Component {
                     </div>
                 </div>
                 <div className="RightBox">
-                    <CartBox displayText={this.state.cartBoxText} cartItems={cartItems}
+                    <CartBox displayText={cartBoxText} cartItems={cartItems}
                              clearCartCallback={this.clearCartEvent}/>
                 </div>
             </div>

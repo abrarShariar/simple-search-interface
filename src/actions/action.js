@@ -68,7 +68,6 @@ export function clearCart() {
     }
 }
 
-
 //for actions handled by network request
 export function requestProducts(product) {
     return {
@@ -109,7 +108,6 @@ export function getHistory(index) {
     else if (index >= history.length) {
         index = history.length - 1;
     }
-
     return {
         type: GET_HISTORY,
         payload: {
