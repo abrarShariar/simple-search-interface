@@ -1,6 +1,8 @@
 /*
  * action types
  */
+import * as _ from 'underscore';
+
 export const SEARCH_PRODUCT = 'SEARCH_PRODUCT'
 export const ADD_TO_CART = 'ADD_TO_CART'
 export const CLEAR_CART = 'CLEAR_CART'
@@ -16,9 +18,11 @@ export const RECEIVE_PRODUCTS = 'RECEIVE_PRODUCTS'
 export const SAVE_SEARCH_RESUTLS = 'SAVE_SEARCH_RESUTLS'
 export const TOGGLE_LOADER = 'TOGGLE_LOADER'
 
+
 let inputKeys = [];
 let history = [
-    {   searchQuery: "",
+    {
+        searchQuery: "",
         searchResults: [],
         cartItems: []
     }
@@ -55,13 +59,41 @@ export function getInputKey() {
     }
 }
 
-export function addToCart(historyIndex, cartItems) {
-    history[historyIndex].cartItems = cartItems;
+export function addToCart(productData) {
+
+    // let newCartItems = history[history.length - 1].cartItems;
+    // let duplicateId = _.find(newCartItems, (item) => {
+    //     return item.id === productData.id;
+    // });
+    // if (!duplicateId) {
+    //     productData['quantity'] = 1;
+    //     newCartItems.push(productData);
+    // } else {
+    //     _.each(newCartItems, (item, index) => {
+    //         if (item.id === productData.id) {
+    //             item.quantity++;
+    //             newCartItems[index] = item;
+    //         }
+    //     });
+    // }
+
+    let newCartItems = [];
+
+    newCartItems.push(productData);
+
+    history.push({
+        searchQuery: history[history.length - 1].searchQuery,
+        searchResults: history[history.length - 1].searchResults,
+        cartItems: newCartItems
+    });
+
+    console.log(history);
+
     return {
         type: ADD_TO_CART,
         payload: {
             historyIndex: historyIndex,
-            cartItems: cartItems
+            cartItems: newCartItems
         }
     }
 }
@@ -121,16 +153,15 @@ export function getHistory(index) {
     }
 }
 
-export function saveSearchResults(searchQuery, searchResults) {
-
-    console.log(history);
-
+export function saveSearchResults(searchQuery, searchResults, cartItems) {
     historyIndex++;
     history.push({
         searchQuery: searchQuery,
         searchResults: searchResults,
         cartItems: []
     });
+
+    console.log(history);
 
     return {
         type: SAVE_SEARCH_RESUTLS,

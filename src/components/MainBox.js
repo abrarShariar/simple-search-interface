@@ -12,7 +12,7 @@ import * as actions from '../actions/action';
 
 let searchResults = [];
 let currentTime = 0;
-let totalSearchHits = 0;
+let totalHits = 0;
 let currentQuery = "";
 let isSearchBtnClicked = false;
 let isShowLoader = false;
@@ -25,10 +25,9 @@ class MainBox extends React.Component {
     constructor(props) {
         super(props);
 
-        cartItems = [];
         isSearchFound = false;
         isSearchBtnClicked = false;
-        searchResults = [];
+        // searchResults = [];
         cartItems = [];
         cartBoxText = "You have no item in your cart";
         isShowLoader = false;
@@ -40,18 +39,18 @@ class MainBox extends React.Component {
     }
 
     getInputKey(e) {
-        this.props.actions.setInputKey(e.target.value);
+        // this.props.actions.setInputKey(e.target.value);
     }
 
     searchHandler() {
-        totalSearchHits++;
-        currentTime = totalSearchHits;
+        totalHits++;
+        currentTime++;
         searchResults = [];
         isSearchBtnClicked = true;
         isShowLoader = true;
 
-        let searchData = this.props.actions.getInputKey();
-        if (_.isEmpty(searchData.payload.key)) {
+        currentQuery = document.getElementById('search-input').value;
+        if (_.isEmpty(currentQuery)) {
             isShowLoader = false;
             setTimeout(() => {
                 isSearchFound = false;
@@ -61,9 +60,9 @@ class MainBox extends React.Component {
             }, 2000)
         }
         else {
-            this.props.actions.fetchProducts(searchData.payload.key)
+            this.props.actions.fetchProducts(currentQuery)
                 .then((data) => {
-                    let result = this.props.actions.receiveProducts(searchData.payload.key, data.hits);
+                    let result = this.props.actions.receiveProducts(currentQuery, data.hits);
                     _.each(result.searchResults.hits, (item) => {
                         let product = {
                             id: item['_id'],
@@ -79,7 +78,7 @@ class MainBox extends React.Component {
                     setTimeout(() => {
                         isSearchFound = true;
                         isShowLoader = false;
-                        this.props.actions.saveSearchResults(searchData.payload.key, searchResults);
+                        this.props.actions.saveSearchResults(currentQuery, searchResults, cartItems);
                     }, 2000)
                 })
                 .catch((err) => {
@@ -92,7 +91,14 @@ class MainBox extends React.Component {
 
     //callback to pass from child component - ProductThumb
     getAddToCartEvent = (productData) => {
+        totalHits++;
+        currentTime++;
         cartBoxText = "";
+
+        this.props.actions.addToCart(productData);
+
+        // cartItems = this.props.actions.getHistory(currentTime).payload.history.cartItems;
+
         let duplicateProduct = _.find(cartItems, (item) => {
             return item.id === productData.id;
         });
@@ -100,14 +106,15 @@ class MainBox extends React.Component {
             productData['quantity'] = 1;
             cartItems.push(productData);
         } else {
-            _.map(cartItems, (item, index) => {
+            _.each(cartItems, (item, index) => {
                 if (item.id === productData.id) {
                     item.quantity++;
                     cartItems[index] = item;
                 }
             });
         }
-        this.props.actions.addToCart(currentTime, cartItems)
+        this.props.actions.toggleLoader();
+        // this.props.actions.addToCart(currentQuery, searchResults, cartItems)
     }
 
     //callback to pass from child component - CartBox
@@ -124,25 +131,27 @@ class MainBox extends React.Component {
         if (currentTime < 0) {
             currentTime = 0;
         } else {
-            cartItems = this.props.actions.getHistory(currentTime).payload.history.cartItems;
             searchResults = this.props.actions.getHistory(currentTime).payload.history.searchResults;
             currentQuery = this.props.actions.getHistory(currentTime).payload.history.searchQuery;
+            cartItems = this.props.actions.getHistory(currentTime).payload.history.cartItems;
             document.getElementById("search-input").value = currentQuery;
         }
+
     }
 
-    //go back hanlder
+    //go back handler
     goForwardHandler() {
         searchResults = [];
         currentTime++;
-        if (currentTime > totalSearchHits) {
-            currentTime = totalSearchHits - 1;
+        if (currentTime > totalHits) {
+            currentTime = totalHits;
         } else {
-            cartItems = this.props.actions.getHistory(currentTime).payload.history.cartItems;
             searchResults = this.props.actions.getHistory(currentTime).payload.history.searchResults;
             currentQuery = this.props.actions.getHistory(currentTime).payload.history.searchQuery;
+            cartItems = this.props.actions.getHistory(currentTime).payload.history.cartItems;
             document.getElementById("search-input").value = currentQuery;
         }
+
     }
 
     render() {
@@ -180,8 +189,9 @@ class MainBox extends React.Component {
                                 searchResults.map((item) => {
                                     return (
                                         <div className="ProductThumbContainer">
-                                            <ProductThumb productData={item}
-                                                          addToCartCallback={this.getAddToCartEvent}/>
+                                            <ProductThumb
+                                                productData={item}
+                                                addToCartCallback={this.getAddToCartEvent}/>
                                         </div>
                                     )
                                 })

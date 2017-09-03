@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import './ProductThumb.css';
 
+//react-redux stuffs
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as actions from '../actions/action';
+
 //component for a product thumb
 class ProductThumb extends React.Component {
 
@@ -10,6 +15,7 @@ class ProductThumb extends React.Component {
     }
 
     addToCartHandler(e) {
+        // this.props.actions.addToCart(this.props.productData);
         this.props.addToCartCallback(this.props.productData);
     }
 
@@ -56,4 +62,11 @@ function ProductTitle(props) {
     )
 }
 
-export default ProductThumb;
+
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+
+export default connect(mapDispatchToProps)(ProductThumb);
